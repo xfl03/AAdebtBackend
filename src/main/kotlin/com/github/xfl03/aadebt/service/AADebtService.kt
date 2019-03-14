@@ -25,16 +25,16 @@ class AADebtService {
     /**
      * 获得所有账目组
      */
-    fun getGroups(): AAlistResponce {
+    fun getGroups(): AAlistResponse {
         val groups = ArrayList<GroupInfo>()
         groupRepo.findAll().forEach { groups.add(GroupInfo(it.id, it.name, it.locked)) }
-        return AAlistResponce(groups)
+        return AAlistResponse(groups)
     }
 
     /**
      * 增加新的账目组
      */
-    fun addGroup(req: AAnewRequest): AAnewResponce {
+    fun addGroup(req: AAnewRequest): AAnewResponse {
         var group = DebtGroup(-1, req.name)
         group = groupRepo.save(group)
         //groupRepo.flush()
@@ -45,34 +45,34 @@ class AADebtService {
             //partRepo.flush()
             parts.add(PartInfo(part.id, it))
         }
-        return AAnewResponce(group.id, req.name, parts)
+        return AAnewResponse(group.id, req.name, parts)
     }
 
     /**
      * 获得账目组下的所有账目
      */
-    fun getDebts(req: AADebtRequest): AADebtResponce {
+    fun getDebts(req: AAdebtRequest): AAdebtResponse {
         val debts = ArrayList<DebtDetailInfo>()
         infoRepo.findAllByGroupId(req.groupId).forEach {
             val part = partRepo.findById(it.payerId).get()
             debts.add(DebtDetailInfo(it.id, it.name, PartInfo(it.payerId, part.name), it.amount))
         }
-        return AADebtResponce(req.groupId, debts)
+        return AAdebtResponse(req.groupId, debts)
     }
 
     /**
      * 获得账目组下的所有参与者
      */
-    fun getParts(req: AApartRequest): AApartResponce {
+    fun getParts(req: AApartRequest): AApartResponse {
         val parts = ArrayList<PartInfo>()
         partRepo.findAllByGroupId(req.groupId).forEach { parts.add(PartInfo(it.id, it.name)) }
-        return AApartResponce(req.groupId, parts)
+        return AApartResponse(req.groupId, parts)
     }
 
     /**
      * 增加账目
      */
-    fun addDebt(req: AAaddRequest): AAaddResponce {
+    fun addDebt(req: AAaddRequest): AAaddResponse {
         var amount = 0
         req.details.forEach { amount += it.amount }
         var debt = DebtInfo(-1, req.groupId, req.name, req.payerId, amount)
@@ -82,7 +82,7 @@ class AADebtService {
             val detail = DebtDetail(-1, req.groupId, debt.id, it.partId, it.amount)
             detailRepo.save(detail)
         }
-        return AAaddResponce(req.groupId, debt.id, req.name, getPartInfo(req.payerId), amount)
+        return AAaddResponse(req.groupId, debt.id, req.name, getPartInfo(req.payerId), amount)
     }
 
     /**
@@ -99,7 +99,7 @@ class AADebtService {
     /**
      * 计算账目组总账目
      */
-    fun calculate(req: AAcalRequest): AAcalResponce {
+    fun calculate(req: AAcalRequest): AAcalResponse {
         //取出参与者、账目、账目细节
         val parts = partRepo.findAllByGroupId(req.groupId)
         val debts = infoRepo.findAllByGroupId(req.groupId)
@@ -154,7 +154,7 @@ class AADebtService {
         }
 
         //返回计算结果
-        return AAcalResponce(req.groupId, infos, pays)
+        return AAcalResponse(req.groupId, infos, pays)
     }
 
     private fun getPartInfo(partId: Int): PartInfo {
@@ -163,5 +163,33 @@ class AADebtService {
 
     private fun getPartPayInfo(from: Int, to: Int, amount: Int): PartPayInfo {
         return PartPayInfo(getPartInfo(from), getPartInfo(to), amount)
+    }
+
+    enum class Id {
+        GROUP, PART, DEBT
+    }
+
+    fun checkId(type: Id, id: Int, more: Int = -1): CommonResponse {
+        when (type) {
+            Id.GROUP -> {
+                if (!groupRepo.findById(id).isPresent) {
+                    return CommonResponse("Group not exists", -404)
+                }
+            }
+            Id.PART -> {
+                if (more < 0 && !partRepo.findById(id).isPresent) {
+                    return CommonResponse("Part not exists", -404)
+                }
+                if (more >= 0 && !partRepo.findByIdAndGroupId(id, more).isPresent) {
+                    return CommonResponse("Part not exists in group", -404)
+                }
+            }
+            Id.DEBT -> {
+                if (!infoRepo.findById(id).isPresent) {
+                    return CommonResponse("Debt not exists", -404)
+                }
+            }
+        }
+        return CommonResponse("OK", 0)
     }
 }

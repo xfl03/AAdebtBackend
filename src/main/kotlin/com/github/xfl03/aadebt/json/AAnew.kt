@@ -1,5 +1,13 @@
 package com.github.xfl03.aadebt.json
 
-data class AAnewRequest(var name: String, var parts: List<String>)
+import javax.validation.constraints.NotBlank
+import javax.validation.constraints.Size
 
-data class AAnewResponce(var groupId: Int, var name: String, var parts: List<PartInfo>)
+data class AAnewRequest(
+        @field:NotBlank(message = "Name requested")
+        var name: String,
+        @field:Size(min = 2, message = "Parts need 2 people at least")
+        var parts: List<String>
+)
+
+data class AAnewResponse(var groupId: Int, var name: String, var parts: List<PartInfo>) : Response()
