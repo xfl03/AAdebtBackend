@@ -1,5 +1,6 @@
-package com.github.xfl03.aadebt.json
+package com.github.xfl03.aadebt.json.aa
 
+import com.github.xfl03.aadebt.json.Response
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
 

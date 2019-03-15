@@ -1,11 +1,15 @@
 package com.github.xfl03.aadebt.service
 
-import com.github.xfl03.aadebt.dao.*
-import com.github.xfl03.aadebt.entity.DebtDetail
-import com.github.xfl03.aadebt.entity.DebtGroup
-import com.github.xfl03.aadebt.entity.DebtInfo
-import com.github.xfl03.aadebt.entity.DebtPart
+import com.github.xfl03.aadebt.repository.aa.DebtDetailRepository
+import com.github.xfl03.aadebt.repository.aa.DebtGroupRepository
+import com.github.xfl03.aadebt.repository.aa.DebtInfoRepository
+import com.github.xfl03.aadebt.repository.aa.DebtPartRepository
+import com.github.xfl03.aadebt.entity.aa.DebtDetail
+import com.github.xfl03.aadebt.entity.aa.DebtGroup
+import com.github.xfl03.aadebt.entity.aa.DebtInfo
+import com.github.xfl03.aadebt.entity.aa.DebtPart
 import com.github.xfl03.aadebt.json.*
+import com.github.xfl03.aadebt.json.aa.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*

@@ -1,29 +1,29 @@
-package com.github.xfl03.aadebt.entity
+package com.github.xfl03.aadebt.entity.aa
 
 import javax.persistence.*
 
 /**
- * 账目组
+ * 账目参与者
  */
 @Entity
-data class DebtGroup(
+data class DebtPart(
 
         /**
-         * 账目组id
+         * 参与者id
          */
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Int = 0,
 
         /**
-         * 账目组名称
+         * 账目组id
          */
         @Column(nullable = false)
-        var name: String = "",
+        var groupId: Int = 0,
 
         /**
-         * 是否已销账
+         * 参与者名称
          */
         @Column(nullable = false)
-        var locked: Boolean = false
+        var name: String = ""
 )

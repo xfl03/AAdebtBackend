@@ -1,15 +1,15 @@
-package com.github.xfl03.aadebt.entity
+package com.github.xfl03.aadebt.entity.aa
 
 import javax.persistence.*
 
 /**
- * 账目信息
+ * 账目详情
  */
 @Entity
-data class DebtInfo(
+data class DebtDetail(
 
         /**
-         * 账目id
+         * 详情id
          */
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,19 +22,19 @@ data class DebtInfo(
         var groupId: Int = 0,
 
         /**
-         * 账目名称
+         * 账目id
          */
         @Column(nullable = false)
-        var name: String = "",
+        var debtId: Int = 0,
 
         /**
-         * 账目付款者id
+         * 参与者id
          */
         @Column(nullable = false)
-        var payerId: Int = 0,
+        var partId: Int = 0,
 
         /**
-         * 账目总额（单位：分）
+         * 金额（单位：分）
          */
         @Column(nullable = false)
         var amount: Int = 0
