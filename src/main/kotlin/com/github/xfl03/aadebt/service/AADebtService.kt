@@ -8,9 +8,11 @@ import com.github.xfl03.aadebt.entity.aa.DebtDetail
 import com.github.xfl03.aadebt.entity.aa.DebtGroup
 import com.github.xfl03.aadebt.entity.aa.DebtInfo
 import com.github.xfl03.aadebt.entity.aa.DebtPart
+import com.github.xfl03.aadebt.entity.auth.AuthUserDetail
 import com.github.xfl03.aadebt.json.*
 import com.github.xfl03.aadebt.json.aa.*
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -29,17 +31,23 @@ class AADebtService {
     /**
      * 获得所有账目组
      */
-    fun getGroups(): AAlistResponse {
+    fun getGroups(): Response {
+        val obj = SecurityContextHolder.getContext().authentication.principal as? AuthUserDetail
+                ?: return CommonResponse("Internal Error", -500)
+
         val groups = ArrayList<GroupInfo>()
-        groupRepo.findAll().forEach { groups.add(GroupInfo(it.id, it.name, it.locked)) }
+        groupRepo.findAllByOwnerId(obj.id).forEach { groups.add(GroupInfo(it.id, it.name, it.locked)) }
         return AAlistResponse(groups)
     }
 
     /**
      * 增加新的账目组
      */
-    fun addGroup(req: AAnewRequest): AAnewResponse {
-        var group = DebtGroup(-1, req.name)
+    fun addGroup(req: AAnewRequest): Response {
+        val obj = SecurityContextHolder.getContext().authentication.principal as? AuthUserDetail
+                ?: return CommonResponse("Internal Error", -500)
+
+        var group = DebtGroup(-1, req.name, false, obj.id)
         group = groupRepo.save(group)
         //groupRepo.flush()
         val parts = ArrayList<PartInfo>()
@@ -176,8 +184,11 @@ class AADebtService {
     fun checkId(type: Id, id: Int, more: Int = -1): CommonResponse {
         when (type) {
             Id.GROUP -> {
-                if (!groupRepo.findById(id).isPresent) {
+                if (more < 0 && !groupRepo.findById(id).isPresent) {
                     return CommonResponse("Group not exists", -404)
+                }
+                if (more >= 0 && !groupRepo.findByIdAndOwnerId(id, more).isPresent) {
+                    return CommonResponse("Not group owner", -403)
                 }
             }
             Id.PART -> {

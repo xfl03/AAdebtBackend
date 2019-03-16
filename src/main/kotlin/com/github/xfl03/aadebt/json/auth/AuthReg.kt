@@ -5,11 +5,11 @@ import javax.validation.constraints.Email
 import javax.validation.constraints.NotEmpty
 
 data class AuthRegRequest(
-        @field:NotEmpty
+        @field:NotEmpty(message = "Name is requested")
         var name: String,
         @field:Email(message = "Not a valid email")
         var email: String,
-        @field:NotEmpty
+        @field:NotEmpty(message = "Password is requested")
         var password: String
 )
 

@@ -25,5 +25,11 @@ data class DebtGroup(
          * 是否已销账
          */
         @Column(nullable = false)
-        var locked: Boolean = false
+        var locked: Boolean = false,
+
+        /**
+         * 账目组拥有者id
+         */
+        @Column(nullable = false)
+        var ownerId: Int
 )

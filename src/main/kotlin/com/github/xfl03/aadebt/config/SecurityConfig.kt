@@ -49,6 +49,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                         "/**/*.css",
                         "/**/*.js"
                 ).permitAll()
+                .antMatchers("/api/info").permitAll()
                 .antMatchers("/api/auth/**").permitAll()
                 .anyRequest().authenticated()
 

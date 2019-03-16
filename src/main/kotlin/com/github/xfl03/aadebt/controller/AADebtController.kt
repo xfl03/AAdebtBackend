@@ -1,9 +1,11 @@
 package com.github.xfl03.aadebt.controller
 
+import com.github.xfl03.aadebt.entity.auth.AuthUserDetail
 import com.github.xfl03.aadebt.json.*
 import com.github.xfl03.aadebt.json.aa.*
 import com.github.xfl03.aadebt.service.AADebtService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.validation.BindingResult
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
@@ -17,7 +19,7 @@ class AADebtController {
     lateinit var service: AADebtService
 
     @RequestMapping(path = ["/api/aa/list"], method = [RequestMethod.GET, RequestMethod.POST])
-    fun list(): AAlistResponse {
+    fun list(): Response {
         return service.getGroups()
     }
 
@@ -30,7 +32,10 @@ class AADebtController {
 
     @RequestMapping(path = ["/api/aa/debt"], method = [RequestMethod.POST])
     fun debt(@RequestBody req: AAdebtRequest): Response {
-        val check = service.checkId(AADebtService.Id.GROUP, req.groupId)
+        val obj = SecurityContextHolder.getContext().authentication.principal as? AuthUserDetail
+                ?: return CommonResponse("Internal Error", -500)
+
+        val check = service.checkId(AADebtService.Id.GROUP, req.groupId, obj.id)
         if (check.code < 0) return check
 
         return service.getDebts(req)
@@ -38,7 +43,10 @@ class AADebtController {
 
     @RequestMapping(path = ["/api/aa/part"], method = [RequestMethod.POST])
     fun part(@RequestBody req: AApartRequest): Response {
-        val check = service.checkId(AADebtService.Id.GROUP, req.groupId)
+        val obj = SecurityContextHolder.getContext().authentication.principal as? AuthUserDetail
+                ?: return CommonResponse("Internal Error", -500)
+
+        val check = service.checkId(AADebtService.Id.GROUP, req.groupId, obj.id)
         if (check.code < 0) return check
 
         return service.getParts(req)
@@ -48,7 +56,11 @@ class AADebtController {
     fun add(@RequestBody @Validated req: AAaddRequest, br: BindingResult): Response {
         if (br.hasErrors()) return CommonResponse(br.allErrors.stream().map { it.defaultMessage }.collect(Collectors.joining(" & ")), -400)
 
-        var check = service.checkId(AADebtService.Id.GROUP, req.groupId)
+
+        val obj = SecurityContextHolder.getContext().authentication.principal as? AuthUserDetail
+                ?: return CommonResponse("Internal Error", -500)
+
+        var check = service.checkId(AADebtService.Id.GROUP, req.groupId, obj.id)
         if (check.code < 0) return check
         check = service.checkId(AADebtService.Id.PART, req.payerId, req.groupId)
         if (check.code < 0) return check
@@ -62,7 +74,10 @@ class AADebtController {
 
     @RequestMapping(path = ["/api/aa/lock"], method = [RequestMethod.POST])
     fun lock(@RequestBody req: AAlockRequest): Response {
-        val check = service.checkId(AADebtService.Id.GROUP, req.groupId)
+        val obj = SecurityContextHolder.getContext().authentication.principal as? AuthUserDetail
+                ?: return CommonResponse("Internal Error", -500)
+
+        val check = service.checkId(AADebtService.Id.GROUP, req.groupId, obj.id)
         if (check.code < 0) return check
 
         return if (service.lockGroup(req))
@@ -73,7 +88,10 @@ class AADebtController {
 
     @RequestMapping(path = ["/api/aa/cal"], method = [RequestMethod.POST])
     fun cal(@RequestBody req: AAcalRequest): Response {
-        val check = service.checkId(AADebtService.Id.GROUP, req.groupId)
+        val obj = SecurityContextHolder.getContext().authentication.principal as? AuthUserDetail
+                ?: return CommonResponse("Internal Error", -500)
+
+        val check = service.checkId(AADebtService.Id.GROUP, req.groupId, obj.id)
         if (check.code < 0) return check
 
         return service.calculate(req)
