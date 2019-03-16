@@ -17,14 +17,14 @@ class UserController {
     @Autowired
     private lateinit var tokenRepo: AuthTokenRepository
 
-    @RequestMapping(path = ["/user/info"], method = [RequestMethod.GET, RequestMethod.POST])
+    @RequestMapping(path = ["/api/user/info"], method = [RequestMethod.GET, RequestMethod.POST])
     fun info(): Response {
         val obj = SecurityContextHolder.getContext().authentication.principal as? AuthUserDetail
                 ?: return CommonResponse("Internal Error", -500)
         return UserInfo(obj.id, obj.name)
     }
 
-    @RequestMapping(path = ["/user/logout"], method = [RequestMethod.GET, RequestMethod.POST])
+    @RequestMapping(path = ["/api/user/logout"], method = [RequestMethod.GET, RequestMethod.POST])
     fun logout(): Response {
         val obj = SecurityContextHolder.getContext().authentication.principal as? AuthUserDetail
                 ?: return CommonResponse("Internal Error", -500)
