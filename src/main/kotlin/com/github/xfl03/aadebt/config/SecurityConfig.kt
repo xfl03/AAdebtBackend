@@ -47,7 +47,9 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                         "/favicon.ico",
                         "/**/*.html",
                         "/**/*.css",
-                        "/**/*.js"
+                        "/**/*.js",
+                        "/**/*.woff",
+                        "/**/*.ttf"
                 ).permitAll()
                 .antMatchers("/api/info").permitAll()
                 .antMatchers("/api/auth/**").permitAll()

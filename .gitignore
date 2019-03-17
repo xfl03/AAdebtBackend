@@ -26,6 +26,4 @@ HELP.md
 /nbdist/
 /.nb-gradle/
 
-src/main/resources/application\.properties
-
 *.properties
