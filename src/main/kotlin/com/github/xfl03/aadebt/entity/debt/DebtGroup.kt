@@ -1,4 +1,4 @@
-package com.github.xfl03.aadebt.entity.aa
+package com.github.xfl03.aadebt.entity.debt
 
 import javax.persistence.*
 
@@ -31,5 +31,13 @@ data class DebtGroup(
          * 账目组拥有者id
          */
         @Column(nullable = false)
-        var ownerId: Int
+        var ownerId: Int,
+
+        /**
+         * 账目组类型
+         * 0 - AA记账
+         * 1 - 普通记账
+         */
+        @Column(nullable = false)
+        var type: Int
 )

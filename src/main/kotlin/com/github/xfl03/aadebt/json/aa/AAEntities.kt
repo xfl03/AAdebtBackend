@@ -2,7 +2,7 @@ package com.github.xfl03.aadebt.json.aa
 
 import javax.validation.constraints.Min
 
-data class GroupInfo(var groupId: Int, var name: String, var locked: Boolean)
+data class GroupInfo(var groupId: Int, var name: String, var locked: Boolean, var type: Int)
 
 data class DebtDetailInfo(var debtId: Int, var name: String, var payer: PartInfo, var amount: Int)
 

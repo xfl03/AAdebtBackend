@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*
 import java.util.stream.Collectors
 
 @RestController
-@ControllerAdvice
 class AADebtController {
 
     @Autowired
@@ -55,7 +54,6 @@ class AADebtController {
     @RequestMapping(path = ["/api/aa/add"], method = [RequestMethod.POST])
     fun add(@RequestBody @Validated req: AAaddRequest, br: BindingResult): Response {
         if (br.hasErrors()) return CommonResponse(br.allErrors.stream().map { it.defaultMessage }.collect(Collectors.joining(" & ")), -400)
-
 
         val obj = SecurityContextHolder.getContext().authentication.principal as? AuthUserDetail
                 ?: return CommonResponse("Internal Error", -500)

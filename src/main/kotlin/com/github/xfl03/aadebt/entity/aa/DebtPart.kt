@@ -3,7 +3,7 @@ package com.github.xfl03.aadebt.entity.aa
 import javax.persistence.*
 
 /**
- * 账目参与者
+ * AA账目参与者
  */
 @Entity
 data class DebtPart(

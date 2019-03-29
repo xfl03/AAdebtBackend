@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.RestController
 class InfoController {
     @RequestMapping(path = ["/api/info"], method = [RequestMethod.GET, RequestMethod.POST])
     fun info(): Response {
-        return CommonResponse("Proudly powered by Spring Boot.", 0)
+        return CommonResponse("Proudly programmed by Spring Boot and Kotlin.", 0)
     }
 }

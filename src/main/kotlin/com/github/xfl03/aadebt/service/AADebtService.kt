@@ -1,11 +1,11 @@
 package com.github.xfl03.aadebt.service
 
 import com.github.xfl03.aadebt.repository.aa.DebtDetailRepository
-import com.github.xfl03.aadebt.repository.aa.DebtGroupRepository
+import com.github.xfl03.aadebt.repository.debt.DebtGroupRepository
 import com.github.xfl03.aadebt.repository.aa.DebtInfoRepository
 import com.github.xfl03.aadebt.repository.aa.DebtPartRepository
 import com.github.xfl03.aadebt.entity.aa.DebtDetail
-import com.github.xfl03.aadebt.entity.aa.DebtGroup
+import com.github.xfl03.aadebt.entity.debt.DebtGroup
 import com.github.xfl03.aadebt.entity.aa.DebtInfo
 import com.github.xfl03.aadebt.entity.aa.DebtPart
 import com.github.xfl03.aadebt.entity.auth.AuthUserDetail
@@ -36,7 +36,9 @@ class AADebtService {
                 ?: return CommonResponse("Internal Error", -500)
 
         val groups = ArrayList<GroupInfo>()
-        groupRepo.findAllByOwnerId(obj.id).forEach { groups.add(GroupInfo(it.id, it.name, it.locked)) }
+        groupRepo.findAllByOwnerIdOrderByIdDesc(obj.id).forEach {
+            groups.add(GroupInfo(it.id, it.name, it.locked, it.type))
+        }
         return AAlistResponse(groups)
     }
 
@@ -47,7 +49,7 @@ class AADebtService {
         val obj = SecurityContextHolder.getContext().authentication.principal as? AuthUserDetail
                 ?: return CommonResponse("Internal Error", -500)
 
-        var group = DebtGroup(-1, req.name, false, obj.id)
+        var group = DebtGroup(-1, req.name, false, obj.id, 0)
         group = groupRepo.save(group)
         //groupRepo.flush()
         val parts = ArrayList<PartInfo>()
