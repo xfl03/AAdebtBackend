@@ -21,7 +21,7 @@ class DebtService {
 
     fun getDebts(req: DebtDebtRequest): DebtDebtResponse {
         val debts = ArrayList<DebtDetailInfo>()
-        infoRepo.findAllByGroupId(req.groupId).forEach {
+        infoRepo.findAllByGroupIdOrderByIdDesc(req.groupId).forEach {
             debts.add(DebtDetailInfo(it.id, it.name, it.amount, it.type, it.date))
         }
         return DebtDebtResponse(debts)
@@ -31,7 +31,7 @@ class DebtService {
         val obj = SecurityContextHolder.getContext().authentication.principal as? AuthUserDetail
                 ?: return CommonResponse("Internal Error", -500)
 
-        val group = DebtGroup(-1, req.name, false, obj.id, 0)
+        val group = DebtGroup(-1, req.name, false, obj.id, 1)
         groupRepo.save(group)
 
         return CommonResponse("OK", 200)

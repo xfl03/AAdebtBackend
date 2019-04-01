@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface DebtNormalInfoRepository : JpaRepository<DebtNormalInfo,Int>{
     fun findAllByGroupId(groupId: Int): List<DebtNormalInfo>
+    fun findAllByGroupIdOrderByIdDesc(groupId: Int): List<DebtNormalInfo>
 }
