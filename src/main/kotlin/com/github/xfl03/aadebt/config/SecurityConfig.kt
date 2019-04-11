@@ -16,6 +16,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.BeanIds
+import org.springframework.security.config.annotation.web.builders.WebSecurity
+
+
 
 
 @Configuration
@@ -65,5 +68,9 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     @Bean(name = [BeanIds.AUTHENTICATION_MANAGER])
     override fun authenticationManagerBean(): AuthenticationManager {
         return super.authenticationManagerBean()
+    }
+
+    override fun configure(web: WebSecurity) {
+        web.ignoring().antMatchers("/js/**","/fonts/**","/css/**")
     }
 }
