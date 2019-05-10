@@ -27,5 +27,3 @@ HELP.md
 /.nb-gradle/
 
 *.properties
-
-src/main/resources/

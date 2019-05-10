@@ -38,7 +38,7 @@ class DebtService {
     }
 
     fun addDebt(req: DebtAddRequest): CommonResponse {
-        val info = DebtNormalInfo(-1, req.groupId, req.name, req.amount, req.type)
+        val info = DebtNormalInfo(-1, req.groupId, req.name, req.amount, req.type, req.date)
         infoRepo.save(info)
 
         return CommonResponse("OK", 200)
@@ -77,6 +77,11 @@ class DebtService {
                 }
             }
         }
+        return CommonResponse("OK", 0)
+    }
+
+    fun delete(req: DebtDelRequest): CommonResponse {
+        infoRepo.deleteById(req.groupId)
         return CommonResponse("OK", 0)
     }
 }
