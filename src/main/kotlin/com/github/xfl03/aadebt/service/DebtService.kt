@@ -72,8 +72,11 @@ class DebtService {
                 }
             }
             AADebtService.Id.DEBT -> {
-                if (!infoRepo.findById(id).isPresent) {
+                if (more < 0 && !infoRepo.findById(id).isPresent) {
                     return CommonResponse("Debt not exists", -404)
+                }
+                if (more >= 0 && !infoRepo.findByIdAndGroupId(id, more).isPresent) {
+                    return CommonResponse("Not in group", -403)
                 }
             }
         }
@@ -81,7 +84,7 @@ class DebtService {
     }
 
     fun delete(req: DebtDelRequest): CommonResponse {
-        infoRepo.deleteById(req.groupId)
+        infoRepo.deleteById(req.debtId)
         return CommonResponse("OK", 0)
     }
 }

@@ -70,6 +70,8 @@ class DebtController {
 
         var check = service.checkId(Id.GROUP, req.groupId, obj.id)
         if (check.code < 0) return check
+        check = service.checkId(Id.DEBT, req.debtId, req.groupId)
+        if (check.code < 0) return check
 
         return service.delete(req)
     }
