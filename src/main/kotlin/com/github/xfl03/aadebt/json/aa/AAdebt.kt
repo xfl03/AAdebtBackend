@@ -4,4 +4,4 @@ import com.github.xfl03.aadebt.json.Response
 
 data class AAdebtRequest(var groupId: Int)
 
-data class AAdebtResponse(var groupId: Int, var debts: List<DebtDetailInfo>): Response()
+data class AAdebtResponse(var groupId: Int, var name: String, var debts: List<DebtDetailInfo>) : Response()

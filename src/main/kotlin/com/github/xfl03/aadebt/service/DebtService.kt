@@ -24,7 +24,8 @@ class DebtService {
         infoRepo.findAllByGroupIdOrderByIdDesc(req.groupId).forEach {
             debts.add(DebtDetailInfo(it.id, it.name, it.amount, it.type, it.date))
         }
-        return DebtDebtResponse(debts)
+        var group = groupRepo.findById(req.groupId).get()
+        return DebtDebtResponse(group.name, debts)
     }
 
     fun addGroup(req: DebtNewRequest): CommonResponse {

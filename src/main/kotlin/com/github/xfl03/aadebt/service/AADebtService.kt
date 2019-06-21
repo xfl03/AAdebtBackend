@@ -71,7 +71,8 @@ class AADebtService {
             val part = partRepo.findById(it.payerId).get()
             debts.add(DebtDetailInfo(it.id, it.name, PartInfo(it.payerId, part.name), it.amount))
         }
-        return AAdebtResponse(req.groupId, debts)
+        var group = groupRepo.findById(req.groupId).get()
+        return AAdebtResponse(req.groupId, group.name, debts)
     }
 
     /**
