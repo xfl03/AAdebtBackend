@@ -33,6 +33,9 @@ class AuthService {
     private lateinit var service: AuthUserDetailService
 
     fun register(req: AuthRegRequest): Response {
+        if (userRepo.findByAccount(req.email).isPresent) {
+            return CommonResponse("Email exists.", -1);
+        }
         val be = BCryptPasswordEncoder()
         var user = AuthUser(-1, req.name, req.email, be.encode(req.password))
         user = userRepo.save(user)
