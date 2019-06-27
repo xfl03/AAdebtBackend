@@ -75,4 +75,18 @@ class DebtController {
 
         return service.delete(req)
     }
+
+    @RequestMapping(path = ["/api/debt/edit"], method = [RequestMethod.POST])
+    fun edit(@RequestBody @Validated req: DebtEditRequest): Response {
+        val obj = SecurityContextHolder.getContext().authentication.principal as? AuthUserDetail
+                ?: return CommonResponse("Internal Error", -500)
+
+        var check = service.checkId(Id.GROUP, req.groupId, obj.id)
+        if (check.code < 0) return check
+        check = service.checkId(Id.DEBT, req.debtId, req.groupId)
+        if (check.code < 0) return check
+
+        return service.edit(req)
+    }
+
 }

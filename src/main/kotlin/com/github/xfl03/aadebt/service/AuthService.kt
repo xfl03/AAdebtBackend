@@ -9,6 +9,7 @@ import com.github.xfl03.aadebt.json.auth.AuthLoginRequest
 import com.github.xfl03.aadebt.json.auth.AuthLoginResponse
 import com.github.xfl03.aadebt.json.auth.AuthRegRequest
 import com.github.xfl03.aadebt.json.auth.AuthRegResponse
+import com.github.xfl03.aadebt.json.user.UserInfo
 import com.github.xfl03.aadebt.repository.auth.AuthTokenRepository
 import com.github.xfl03.aadebt.repository.auth.AuthUserRepository
 import org.apache.tomcat.util.codec.binary.Base64
@@ -70,5 +71,16 @@ class AuthService {
 
     fun getRandomToken(): String {
         return Base64.encodeBase64String(UUID.randomUUID().toString().toByteArray())
+    }
+    fun info():Response{
+        val obj = SecurityContextHolder.getContext().authentication.principal as? AuthUserDetail
+                ?: return CommonResponse("Internal Error", -500)
+        return UserInfo(obj.id, obj.name)
+    }
+    fun logout():Response{
+        val obj = SecurityContextHolder.getContext().authentication.principal as? AuthUserDetail
+                ?: return CommonResponse("Internal Error", -500)
+        tokenRepo.deleteByToken(obj.token)
+        return CommonResponse("Log out successful", 0)
     }
 }

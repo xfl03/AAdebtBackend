@@ -21,7 +21,11 @@ class DebtService {
 
     fun getDebts(req: DebtDebtRequest): DebtDebtResponse {
         val debts = ArrayList<DebtDetailInfo>()
-        infoRepo.findAllByGroupIdOrderByIdDesc(req.groupId).forEach {
+        val temp = when (req.orderBy) {
+            1 -> infoRepo.findAllByGroupIdOrderByDateDesc(req.groupId)
+            else -> infoRepo.findAllByGroupIdOrderByIdDesc(req.groupId)
+        }
+        temp.forEach {
             debts.add(DebtDetailInfo(it.id, it.name, it.amount, it.type, it.date))
         }
         var group = groupRepo.findById(req.groupId).get()
@@ -86,6 +90,12 @@ class DebtService {
 
     fun delete(req: DebtDelRequest): CommonResponse {
         infoRepo.deleteById(req.debtId)
+        return CommonResponse("OK", 0)
+    }
+
+    fun edit(req: DebtEditRequest): CommonResponse {
+        val info = DebtNormalInfo(req.debtId, req.groupId, req.name, req.amount, req.type, req.date)
+        infoRepo.save(info)
         return CommonResponse("OK", 0)
     }
 }

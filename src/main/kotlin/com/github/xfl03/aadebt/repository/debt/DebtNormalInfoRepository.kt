@@ -9,5 +9,6 @@ import java.util.*
 interface DebtNormalInfoRepository : JpaRepository<DebtNormalInfo,Int>{
     fun findAllByGroupId(groupId: Int): List<DebtNormalInfo>
     fun findAllByGroupIdOrderByIdDesc(groupId: Int): List<DebtNormalInfo>
+    fun findAllByGroupIdOrderByDateDesc(groupId: Int): List<DebtNormalInfo>
     fun findByIdAndGroupId(id: Int, droupId: Int): Optional<DebtNormalInfo>
 }
