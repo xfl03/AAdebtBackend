@@ -44,5 +44,11 @@ data class DebtNormalInfo(
          * 账目日期
          */
         @Column(nullable = false)
-        var date: Date = Date(System.currentTimeMillis())
+        var date: Date = Date(System.currentTimeMillis()),
+
+        /**
+         * 是否为非日常记账
+         */
+        @Column(nullable = false)
+        var special: Boolean = false
 )

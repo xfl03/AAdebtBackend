@@ -14,5 +14,6 @@ data class DebtAddRequest(
         @field:Min(value = 0, message = "Type should more than 0")
         @field:Max(value = 12, message = "Type should less than 12")
         var type: Int,
-        var date: Date
+        var date: Date,
+        var special: Boolean = false
 )
